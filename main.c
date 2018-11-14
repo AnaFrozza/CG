@@ -4,23 +4,21 @@
 
 float spin = 0;
 
-void Spin(int value){
+void Loop(int value){
     spin += 1.0f;
-    if (spin >= 20.0f){
-        spin += 0.0f;
+    if (spin >= 360.0f){
+        spin = 0.0f;
     }
     glutPostRedisplay();
-    glutTimerFunc(40,Timer, 1);
+    glutTimerFunc(40,Loop, 1);
 }
 
-
 int init(void){
-    glClearColor(0.0, 0.0, 0.0, 0.0);     //define a cor de fundo
-    glEnable(GL_DEPTH_TEST);           //remoção de superficie oculta
-
-    glMatrixMode(GL_PROJECTION);          //define que a matriz eh a de projeção
-    glLoadIdentity();                     //carrega a matriz de identidade
-     glOrtho(-3.0, 3.0, -3.0, 3.0, 1.0, 50); //define uma projeção ortografica     
+    glClearColor(0.0, 0.0, 0.0, 0.0);       //define a cor de fundo
+    glEnable(GL_DEPTH_TEST);                //remoção de superficie oculta
+    glMatrixMode(GL_PROJECTION);            //define que a matriz eh a de projeção
+    glLoadIdentity();                       //carrega a matriz de identidade
+    glOrtho(-3.0, 3.0, -3.0, 3.0, 1.0, 50); //define uma projeção ortografica     
 }
 
 void display(){
@@ -36,69 +34,70 @@ void display(){
     glFlush();
 }
 
+// bule azul claro
 void desenha_buleCSE(){
     glColor3f(0, 1, 1);
-    glPushMatrix(); //armazena a matriz corrente
-        glTranslatef(-1.5, 1.5, 0);
-       gluLookAt(0.0, 50.0, 1.0, 
-                 0.0, 0.0, 0.0, 
-                 0.0, 1.0, 0.0);
-        // glRotatef(-2,2,-2,2);
-        glutWireTeapot(1);
-    glPopMatrix(); //restaura a matriz anterior
-    
+    glPushMatrix();             //armazena a matriz corrente
+    glTranslatef(-1.5, 1.5, 0);
+    gluLookAt(0.0, 50.0, 1.0,   //posição da camera - topo
+              0.0, 0.0, 0.0,    //para onde a camera aponta
+              0.0, 1.0, 0.0);   //vetor view-up
+    glutWireTeapot(1);
+    glPopMatrix();              //restaura a matriz anterior
 }
 
+// bule amarelo
 void desenha_buleCSD(){
     glColor3f(1, 1, 0); 
-    glPushMatrix(); //armazena a matriz corrente
-        glTranslatef(1.5, 1.5, 0);
-        gluLookAt(-1.0, 0.0, 0.0, 
-                  0.0, 0.0, 0.0, 
-                  0.0, 1.0, 0.0); //camera olhando de frente
-        // glRotatef(-2,2,-2,2);
-        glutWireTeapot(1);
-    glPopMatrix(); //restaura a matriz anterior
+    glPushMatrix();             //armazena a matriz corrente
+    glTranslatef(1.5, 1.5, 0);
+    gluLookAt(-1.0, 0.0, 0.0,   //posição da camera - lateral direita
+              0.0, 0.0, 0.0,    //para onde a camera aponta
+              0.0, 1.0, 0.0);   //vetor view-up
+    glutWireTeapot(1);
+    glPopMatrix();              //restaura a matriz anterior
 }
 
-
+// bule roxo
 void desenha_buleCIE(){
     glColor3f(1, 0, 1);
-    glPushMatrix(); //armazena a matriz corrente
-        glTranslatef(-1.5, -1.5, 0);
-        gluLookAt(0.0, 0.0, 1.0, 
-                  0.0, 0.0, 0.0, 
-                  0.0, 1.0, 0.0); //camera olhando de frente
-        // glRotatef(-3,3,-3,3);
-        glutWireTeapot(1);
-    glPopMatrix(); //restaura a matriz anterior
+    glPushMatrix();             //armazena a matriz corrente
+    glTranslatef(-1.5, -1.5, 0);
+    gluLookAt(0.0, 0.0, 1.0,    //posição da camera - visão frontal
+              0.0, 0.0, 0.0,    //para onde a camera aponta
+              0.0, 1.0, 0.0);   //vetor view-up
+    glutWireTeapot(1);
+    glPopMatrix();              //restaura a matriz anterior
 }
 
+// bule verde
 void desenha_buleCID(){
     glColor3f(0, 1, 0);
-    glPushMatrix(); //armazena a matriz corrente
-        
-        glTranslatef(1.5, -1.5, 0);
-        glRotatef(2*spin, 1.0, 0.0, 0.0);
-        gluLookAt(-1.0, 0.0, 0.0, 
-                  0.0, 0.0, 0.0, 
-                  0.0, 1.0, 0.0); //camera olhando de frente
-        glutWireTeapot(1);
-    glPopMatrix(); //restaura a matriz anterior
+    glPushMatrix();             //armazena a matriz corrente
+    glTranslatef(1.5, -1.5, 0);
+    gluPerspective(70.0, 1.0, 1.0, 5.0);
+    gluLookAt(0.0, 0.0, 1.0,   //posição da camera - visão frontal
+              0.0, 0.0, 0.0,    //para onde a camera aponta
+              0.0, 1.0, 0.0);   //vetor view-up
+    
+    glRotatef(45.0, 1, 0, 0);
+    glRotatef(spin*1, 0, 0, 1);
+
+    glutWireTeapot(0.5);
+    glPopMatrix();              //restaura a matriz anterior
 }
 
 
 int main(int argc, char** argv){
     glutInit(&argc,argv);                           //inicializa o GLUT
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);    //configura o modo de display
-    // glutInitWindowPosition(200,0);                  //seta a posição inicial da janela
     glutInitWindowSize(800,800);                    //configura a largura e altura da janela de exibição
     glutCreateWindow("Bonus 2");                 //cria a janela de exibiçao
 
     init();                                         //executa função de inicializaçao
     glutDisplayFunc(display);
 
-    glutTimerFunc(20, Spin, 1);
+    glutTimerFunc(20, Loop, 1);
 
     glutMainLoop();                                  //mostre tudo e espere
     return 0;
